@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="navigation">
+    <div id="kt_app_header" class="app-header d-flex d-lg-none border-bottom">
+        <!--begin::Header container-->
+        <div class="app-container container-fluid d-flex flex-stack" id="kt_app_header_container">
+            <!--begin::Sidebar toggle-->
+            <button class="btn btn-icon btn-sm btn-active-color-primary ms-n2" id="kt_app_sidebar_mobile_toggle">
+                <i class="ki-outline ki-abstract-14 fs-2"></i>
+            </button>
+            <!--end::Sidebar toggle-->
+            <!--begin::Logo-->
+            <a href="index.html">
+                <img alt="Logo" src="assets/media/logos/demo59.svg" class="h-30px theme-light-show" />
+                <img alt="Logo" src="assets/media/logos/demo59-dark.svg" class="h-30px theme-dark-show" />
+            </a>
+            <!--end::Logo-->
+            <!--begin::Sidebar panel toggle-->
+            <button class="btn btn-icon btn-sm btn-active-color-primary me-n2" id="kt_app_aside_mobile_toggle">
+                <i class="ki-outline ki-menu fs-2"></i>
+            </button>
+            <!--end::Sidebar panel toggle-->
+        </div>
+        <!--end::Header container-->
+    </div>
+</div>
