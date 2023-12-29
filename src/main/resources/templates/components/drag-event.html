@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+
+<script th:fragment="drag-event" th:inline="javascript">
+
+$(document).ready(function() {
+    // Add event listeners for dragging and dropping
+    $('.event').on('dragstart', function(event) {
+        const dragEvent = event.originalEvent;
+        dragEvent.dataTransfer.setData('text/plain', this.id);
+        console.log('Drag started, id:', this.id);
+        $('.event-dropzone').addClass('highlight-dropzone');
+    });
+
+    $('.event-dropzone').on('dragenter', function(event) {
+        event.preventDefault();
+        $('.event-dropzone').addClass('highlight-dropzone');
+    });
+
+    $('td').on('dragover', function(event) {
+        event.preventDefault(); // Allow dropping by preventing the default handling of the event
+    });
+
+    $('td.event-dropzone').on('drop', function(event) {
+        event.preventDefault();
+        const id = event.originalEvent.dataTransfer.getData('text/plain');
+        const targetDiv = $(event.target).closest('td').find('div').first();
+
+        // Now we get the data attributes from the div
+        const newEmployeeId = targetDiv.data('employee-id');
+        const newDay = targetDiv.data('day');
+
+        // console.log("id:", id)
+        // console.log("targetTd:", targetDiv)
+        // console.log("newEmployeeId:", newEmployeeId)
+        // console.log("newDay:", newDay)
+
+        // Use HTMX to send a POST request
+        const xhr = new XMLHttpRequest();
+        xhr.open("POST", '/api/events/move', true);
+        xhr.setRequestHeader("Content-Type", "application/json");
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    htmx.trigger('#dashboard', 'updateDashboard');
+                } else {
+                    // Handle errors
+                }
+            }
+        };
+        const data = JSON.stringify({
+            eventId: id,
+            newEmployeeId: newEmployeeId,
+            newDay: newDay
+        });
+        xhr.send(data);
+
+        $('.event-dropzone').removeClass('highlight-dropzone');
+    });
+
+    $('.event').on('dragend', function(event) {
+        $('.event-dropzone').removeClass('highlight-dropzone');
+    });
+})
+
+</script>
