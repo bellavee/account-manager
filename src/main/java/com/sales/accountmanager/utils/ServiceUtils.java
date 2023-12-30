@@ -2,11 +2,13 @@ package com.sales.accountmanager.utils;
 
 import com.sales.accountmanager.constant.ApiConstant;
 import com.sales.accountmanager.model.ApiResult;
+import jakarta.persistence.EntityNotFoundException;
 import org.slf4j.Logger;
 import org.springframework.util.ObjectUtils;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.*;
 import java.util.stream.Collectors;
 
@@ -22,7 +24,7 @@ public class ServiceUtils {
     public static <DTO, Entity, ID> ApiResult<DTO> saveGeneric(
             DTO dto,
             Function<DTO, ID> getIdFunction,
-            Function<ID, Entity> findEntityFunction,
+            Function<ID, Optional<Entity>> findEntityFunction,
             Supplier<Entity> createEntitySupplier,
             BiFunction<DTO, Entity, Entity> saveEntityFunction,
             Supplier<List<DTO>> findAllSupplier,
@@ -37,8 +39,14 @@ public class ServiceUtils {
             LocalDateTime now = LocalDateTime.now();
 
             if (id != null) {
-                entity = findEntityFunction.apply(id);
-                setUpdatedAtFunction.accept(entity, now);
+                Optional<Entity> optionalEntity = findEntityFunction.apply(id);
+                if (optionalEntity.isPresent()) {
+                    entity = optionalEntity.get();
+                    setUpdatedAtFunction.accept(entity, now);
+                } else {
+                    log.error("Entity with ID {} not found", id);
+                    throw new EntityNotFoundException("Entity not found for ID: " + id);
+                }
             } else {
                 entity = createEntitySupplier.get();
                 setCreatedAtFunction.accept(entity, now);
@@ -59,6 +67,7 @@ public class ServiceUtils {
             return result;
         }
     }
+
 
 
     public static <ID, Entity> ApiResult<?> deleteGeneric(
@@ -88,6 +97,21 @@ public class ServiceUtils {
         return result;
     }
 
+
+    public static <ID, E, D> D findById(
+            ID id,
+            Function<ID, Optional<E>> findEntityFunction,
+            Function<E, D> convertToDtoFunction) {
+
+        if (!ObjectUtils.isEmpty(id)) {
+            Optional<E> entityOptional = findEntityFunction.apply(id);
+            if (entityOptional.isPresent()) {
+                E entity = entityOptional.get();
+                return convertToDtoFunction.apply(entity);
+            }
+        }
+        return null;
+    }
 
     public static <ID, E, D> D findEntity(
             ID id,

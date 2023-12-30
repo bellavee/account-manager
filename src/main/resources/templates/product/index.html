@@ -23,7 +23,7 @@
                                 <!--begin::Page title-->
                                 <div class="page-title d-flex flex-column justify-content-center gap-1 me-3">
                                     <!--begin::Title-->
-                                    <h1 class="page-heading d-flex flex-column justify-content-center text-gray-900 fw-bold fs-3 m-0">Accounts</h1>
+                                    <h1 class="page-heading d-flex flex-column justify-content-center text-gray-900 fw-bold fs-3 m-0">Products</h1>
                                     <!--end::Title-->
                                     <!--begin::Breadcrumb-->
                                     <ul class="breadcrumb breadcrumb-separatorless fw-semibold fs-7 my-0">
@@ -39,7 +39,7 @@
 
                                 <!--begin::Actions-->
                                 <div class="d-flex align-items-center gap-2 gap-lg-3">
-                                    <a hx-get="/account/form"
+                                    <a hx-get="/product/form"
                                        hx-target="#dialog"
                                        data-bs-toggle="modal"
                                        type="button"
@@ -64,11 +64,17 @@
                                             <tr class="fw-bold text-gray-800 border-bottom border-gray-200">
                                                 <th>#</th>
                                                 <th>[[#{name}]]</th>
-                                                <th>[[#{type}]]</th>
+                                                <th>[[#{description}]]</th>
+                                                <th>[[#{price}]]</th>
+                                                <th>[[#{principalAmount}]]</th>
+                                                <th>[[#{currencyRate}]]</th>
+                                                <th>[[#{converter}]]</th>
+                                                <th>[[#{intAmount}]]</th>
+                                                <th>[[#{interest}]]</th>
                                             </tr>
                                             </thead>
-                                            <tbody id="account-table" hx-target="this">
-                                            <tr th:replace="~{account/fragments :: table}"
+                                            <tbody id="product-table" hx-target="this">
+                                            <tr th:replace="~{product/fragments :: table}"
                                                 th:if="${data != null}"></tr>
                                             </tbody>
                                         </table>
@@ -97,7 +103,7 @@
 <!--end::Scrolltop-->
 
 <div th:replace="~{layout/footer :: script}"></div>
-<div th:insert="~{components/fragments :: modal-placeholder}"></div>
+	<div th:insert="~{components/fragments :: modal-placeholder}"></div>
 
 
 </body>

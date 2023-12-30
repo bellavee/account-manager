@@ -1,8 +1,7 @@
 package com.sales.accountmanager.controller;
 
 import com.sales.accountmanager.constant.PathConstant;
-import com.sales.accountmanager.dto.AccountDto;
-import com.sales.accountmanager.service.AccountService;
+import com.sales.accountmanager.dto.ProductDto;
 import com.sales.accountmanager.service.ProductService;
 import com.sales.accountmanager.utils.ControllerHelper;
 import io.github.wimdeblauwe.htmx.spring.boot.mvc.HtmxResponse;
@@ -14,51 +13,44 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
-@RequestMapping(PathConstant.ACCOUNT)
-public class AccountController {
+@RequestMapping(PathConstant.PRODUCT)
+public class ProductController {
 
-    private final AccountService accountService;
     private final ProductService productService;
 
-    public AccountController(AccountService accountService, ProductService productService) {
-        this.accountService = accountService;
+    public ProductController(ProductService productService) {
         this.productService = productService;
     }
 
     @GetMapping
     public String index(Model model) {
-        model.addAttribute("activePage", "account");
-        model.addAttribute("data", accountService.findAll());
-        return "account/index";
+        model.addAttribute("activePage", "product");
+        model.addAttribute("data", productService.findAll());
+        return "product/index";
     }
 
     @GetMapping(PathConstant.FORM)
     public HtmxResponse openForm(Model model) {
-        AccountDto form = new AccountDto();
-        model.addAttribute("accountForm", form);
-        model.addAttribute("productList", productService.findAll());
-        return new HtmxResponse().addTemplate("account/fragments :: modal");
+        ProductDto form = new ProductDto();
+        model.addAttribute("productForm", form);
+        return new HtmxResponse().addTemplate("product/fragments :: modal");
     }
 
     @GetMapping(PathConstant.FORM + "/{id}")
     public HtmxResponse openModal(@PathVariable(name = "id") Long id, Model model) {
-        AccountDto form = accountService.findById(id);
-        model.addAttribute("accountForm", form);
-        model.addAttribute("productList", productService.findAll());
-        return new HtmxResponse().addTemplate("account/fragments :: modal");
+        model.addAttribute("productForm", productService.findById(id));
+        return new HtmxResponse().addTemplate("product/fragments :: modal");
     }
 
     @PostMapping(PathConstant.SAVE)
-    public HtmxResponse save(AccountDto dto, Model model) {
+    public HtmxResponse save(ProductDto dto, Model model) {
         return ControllerHelper.saveGeneric(
                 dto,
-                accountService::save,
+                productService::save,
                 model,
-                "account/fragments",
+                "product/fragments",
                 "Oke"
         );
     }
-
-
 
 }

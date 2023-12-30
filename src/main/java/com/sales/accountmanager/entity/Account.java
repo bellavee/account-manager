@@ -5,6 +5,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -14,16 +15,19 @@ import java.util.UUID;
 public class Account {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "account_seq")
+    @SequenceGenerator(name = "account_seq", allocationSize = 1)
     private Long id;
 
     private Long productId;
 
+    private String name;
+
     private String description;
 
-    private BigDecimal crystal;
+    private int crystal;
 
-    private BigDecimal bigNote;
+    private int bigNote;
 
     @Convert(converter = StringListConverter.class)
     private List<String> tags;
@@ -32,8 +36,11 @@ public class Account {
 
     private Boolean isSold;
 
+    private String imageUrl;
+
     private Date createdTime;
 
     private Date updatedTime;
+
 
 }

@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<form th:fragment="modal" class="modal-content" th:action="@{/account/save}" th:object="${productForm}">
+    <div class="modal-header">
+        <h2 class="fw-bold">[[#{account.info}]]</h2>
+        <div id="close" class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
+            <i class="ki-duotone ki-cross fs-1">
+                <span class="path1"></span>
+                <span class="path2"></span>
+            </i>
+        </div>
+    </div>
+
+    <div class="modal-body">
+
+        <input th:field="*{id}" type="hidden"/>
+
+        <div class="row mb-2">
+            <div class="col-md-2">
+                <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
+                    <label th:for="name">[[#{name}]]</label>
+                </div>
+            </div>
+            <div class="col">
+                <input th:field="*{name}" type="text" class="form-control form-control-solid form-control-sm"/>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-md-2">
+                <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
+                    <label th:for="description">[[#{description}]]</label>
+                </div>
+            </div>
+            <div class="col">
+                <textarea th:field="*{description}" type="text" class="form-control form-control-solid form-control-sm"></textarea>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-md-2">
+                <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
+                    <label th:for="colorHex">Color</label>
+                </div>
+            </div>
+            <div class="col">
+                <select th:field="*{colorHex}" class="form-select form-select-solid form-select-sm">
+                    <option value=""></option>
+                    <option th:each="item : ${T(com.sales.accountmanager.enums.Colors).values()}"
+                            th:value="${item.colorHex}"
+                            th:text="#{${item}}"
+                    ></option>
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-2">
+            <div class="col-md-2">
+                <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
+                    <label th:for="price">[[#{price}]]</label>
+                </div>
+            </div>
+            <div class="col">
+                <input th:field="*{price}" type="text" class="number-separator form-control form-control-solid form-control-sm"/>
+            </div>
+        </div>
+
+        <div class="row mb-auto">
+            <div class="col-md-2">
+                <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
+                    <label th:for="principalAmount">[[#{principalAmount}]]</label>
+                </div>
+            </div>
+            <div class="col">
+                <input th:field="*{principalAmount}" type="text" class="number-separator form-control form-control-solid form-control-sm"/>
+            </div>
+
+            <div class="col-md-2">
+                <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
+                    <label th:for="currencyRate">[[#{currencyRate}]]</label>
+                </div>
+            </div>
+            <div class="col">
+                <input th:field="*{currencyRate}" type="text" class="number-separator form-control form-control-solid form-control-sm"/>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="modal-footer flex-center">
+        <button type="reset" class="btn btn-light me-3 btn-sm" data-bs-dismiss="modal">[[#{button.discard}]]</button>
+        <button hx-post="/product/save"
+                hx-target="#product-table"
+                class="btn btn-primary btn-sm">
+            [[#{button.submit}]]
+        </button>
+    </div>
+
+    <script th:inline="javascript">
+        /*<![CDATA[*/
+
+        easyNumberSeparator({
+            selector: '.number-separator',
+            separator: ','
+        })
+
+        /*]]>*/
+    </script>
+</form>
+
+<tr th:fragment="table"
+    th:each="item, idx : ${data}">
+    <td class="align-middle">[[${idx.count}]]</td>
+    <td class="align-middle">
+        <div class="btn btn-sm text-black px-2 py-1"
+             th:style="'background-color: ' + ${item.colorHex}"
+             hx:get="|/product/form/${item.id}|"
+             hx-target="#dialog"
+             data-bs-toggle="modal"
+        >[[${item.name}]]</div>
+    </td>
+    <td class="align-middle">[[${item.description}]]</td>
+    <td class="align-middle">[[${item.price}]]</td>
+    <td class="align-middle">[[${item.principalAmount}]]</td>
+    <td class="align-middle">[[${item.currencyRate}]]</td>
+    <td class="align-middle">[[${item.converter}]]</td>
+    <td class="align-middle">[[${item.intAmount}]]</td>
+    <td class="align-middle">[[${item.interest}]]</td>
+</tr>

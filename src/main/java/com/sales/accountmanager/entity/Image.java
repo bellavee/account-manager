@@ -6,25 +6,27 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import lombok.Data;
 
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
 @Data
-public class PurchaseHistory {
+public class Image {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long accountId;
+    private String imageUrl; // URL of the image
 
-    private BigDecimal salePrice;
+    private String title;    // Optional: Title of the image
 
-    private LocalDateTime saleDate;
+    private String format;   // Optional: Image format (jpg, png, etc.)
+
+    private Long size;
 
     private Date createdTime;
 
     private Date updatedTime;
+
 }
