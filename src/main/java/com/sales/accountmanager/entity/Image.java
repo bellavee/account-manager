@@ -17,15 +17,15 @@ public class Image {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String imageUrl; // URL of the image
+    private String publicId;
 
-    private String title;    // Optional: Title of the image
+    private String url;
 
-    private String format;   // Optional: Image format (jpg, png, etc.)
+    private String format;
 
-    private Long size;
+    private Integer size;
 
-    private Date createdTime;
+    private String createdTime;
 
     private Date updatedTime;
 

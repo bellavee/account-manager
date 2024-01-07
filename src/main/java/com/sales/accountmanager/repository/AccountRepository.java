@@ -14,6 +14,8 @@ public interface AccountRepository extends JpaRepository<Account, Long> {
     @NotNull
     Optional<Account> findById(@NotNull Long id);
 
-    List<Account> findAllByOrderByCreatedTimeDesc();
+    List<Account> findAllByOrderByCreatedTimeAsc();
+
+    List<Account> findByProductId(Long productId);
 
 }

@@ -39,10 +39,8 @@
 
                                 <!--begin::Actions-->
                                 <div class="d-flex align-items-center gap-2 gap-lg-3">
-                                    <a hx-get="/account/form"
-                                       hx-target="#dialog"
-                                       data-bs-toggle="modal"
-                                       type="button"
+                                    <a hx-get="/account/create"
+                                       hx-target="#account-table"
                                        class="btn btn-sm btn-flex btn-outline btn-color-gray-700 btn-active-color-primary bg-body fw-bold">[[#{button.add}]]</a>
                                 </div>
                                 <!--end::Actions-->
@@ -56,25 +54,21 @@
                     <div id="kt_app_content" class="app-content flex-column-fluid">
                         <!--begin::Content container-->
                         <div id="kt_app_content_container" class="app-container">
-                            <div class="card card-bordered mb-5 mb-xxl-8">
-                                <div class="card-body p-5">
-                                    <div class="table-responsive">
-                                        <table class="table table-hover gy-2 mb-0">
-                                            <thead>
-                                            <tr class="fw-bold text-gray-800 border-bottom border-gray-200">
-                                                <th>#</th>
-                                                <th>[[#{name}]]</th>
-                                                <th>[[#{type}]]</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="account-table" hx-target="this">
-                                            <tr th:replace="~{account/fragments :: table}"
-                                                th:if="${data != null}"></tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-
-                                </div>
+                            <div class="table-responsive">
+                                <table class="table table-hover gy-2 mb-0">
+                                    <thead>
+                                    <tr class="fw-bold text-gray-800 border-bottom border-gray-200">
+                                        <th>#</th>
+                                        <th>[[#{name}]]</th>
+                                        <th>[[#{type}]]</th>
+                                        <th>[[#{preview}]]</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="account-table" hx-target="this">
+                                    <tr th:replace="~{account/fragments :: table}"
+                                        th:if="${data != null}"></tr>
+                                    </tbody>
+                                </table>
                             </div>
                         </div>
                         <!--end::Content container-->

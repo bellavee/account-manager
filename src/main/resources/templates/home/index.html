@@ -16,6 +16,50 @@
 						<div class="d-flex flex-column flex-column-fluid">
 							<div id="kt_app_content" class="app-content flex-column-fluid">
 								<div id="kt_app_content_container" class="app-container container-xxl">
+									<!--begin::Accordion-->
+									<div th:each="product : ${products}" class="accordion accordion-icon-toggle" th:id="'product' + ${product.id}">
+										<!--begin::Item-->
+										<div class="mb-5">
+											<!--begin::Header-->
+											<div class="accordion-header py-3 d-flex" data-bs-toggle="collapse" th:data-bs-target="'#product_product_' + ${product.id}">
+												<span class="accordion-icon">
+													<i class="ki-duotone ki-arrow-right fs-4"><span class="path1"></span><span class="path2"></span></i>
+												</span>
+												<h3 class="btn tags mb-0 ms-4"
+													th:style="'background-color: ' + ${product.colorHex}">
+													[[${product.name}]]
+											</div>
+											<!--end::Header-->
+
+											<!--begin::Body-->
+											<div th:id="'product_product_' + ${product.id}" class="fs-6 collapse show ps-10" th:data-bs-parent="'#product' + ${product.id}">
+												<table class="table table-hover gy-2 mb-0">
+													<thead class="d-none">
+													<tr class="fw-bold text-gray-800 border-bottom border-gray-200">
+														<th>#</th>
+														<th>[[#{name}]]</th>
+														<th>[[#{type}]]</th>
+														<th>[[#{preview}]]</th>
+													</tr>
+													</thead>
+													<tbody hx:get="@{/account/product/{id}(id=${product.id})}"
+														   hx-trigger="load">
+
+													</tbody>
+												</table>
+											</div>
+											<!--end::Body-->
+										</div>
+										<!--end::Item-->
+									</div>
+
+									<!--end::Item-->
+
+
+
+
+									</div>
+									<!--end::Accordion-->
 
 								</div>
 							</div>

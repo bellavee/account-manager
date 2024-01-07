@@ -102,3 +102,23 @@ const monthPicker = (id) => {
 
 weekPicker("weekPicker");
 monthPicker("monthPicker");
+
+function uploadImage(id, file) {
+    let formData = new FormData();
+    formData.append('file', file)
+    formData.append('id', id)
+
+    $.ajax({
+        url: '/api/upload', // Replace with your server endpoint
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            toastr.success('File uploaded successfully')
+        },
+        error: function(xhr, status, error) {
+            toastr.error('Error uploading file')
+        }
+    })
+}

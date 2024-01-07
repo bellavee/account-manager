@@ -1,7 +1,11 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
-<form th:fragment="modal" class="modal-content" th:action="@{/account/save}" th:object="${accountForm}">
+<form th:fragment="modal" class="modal-content"
+      th:object="${accountForm}"
+      enctype="multipart/form-data"
+      hx-encoding="multipart/form-data"
+>
     <div class="modal-header">
         <h2 class="fw-bold">[[#{account.info}]]</h2>
         <div id="close" class="btn btn-icon btn-sm btn-active-icon-primary" data-bs-dismiss="modal">
@@ -17,7 +21,7 @@
         <input th:field="*{id}" type="hidden"/>
 
         <div class="row mb-2">
-            <div class="col-md-2">
+            <div class="col-4 col-md-2">
                 <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
                     <label th:for="name">[[#{name}]]</label>
                 </div>
@@ -28,7 +32,7 @@
         </div>
 
         <div class="row mb-2">
-            <div class="col-md-2">
+            <div class="col-4 col-md-2">
                 <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
                     <label th:for="productId">[[#{product}]]</label>
                 </div>
@@ -45,7 +49,7 @@
         </div>
 
         <div class="row mb-2">
-            <div class="col-md-2">
+            <div class="col-4 col-md-2">
                 <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
                     <label th:for="description">[[#{description}]]</label>
                 </div>
@@ -56,7 +60,7 @@
         </div>
 
         <div class="row mb-2">
-            <div class="col-md-2">
+            <div class="col-4 col-md-2">
                 <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
                     <label th:for="tags">Tags</label>
                 </div>
@@ -67,7 +71,7 @@
         </div>
 
         <div class="row mb-2">
-            <div class="col-md-2">
+            <div class="col-4 col-md-2">
                 <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
                     <label th:for="crystal">Crystals</label>
                 </div>
@@ -76,7 +80,7 @@
                 <input th:field="*{crystal}" type="number" class="form-control form-control-solid form-control-sm"/>
             </div>
 
-            <div class="col-md-2">
+            <div class="col-4 col-md-2">
                 <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
                     <label th:for="bigNote">Big note</label>
                 </div>
@@ -86,22 +90,8 @@
             </div>
         </div>
 
-        <div class="row mb-2">
-            <div class="col-md-2">
-                <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
-                    <label th:for="imageBase64">Preview</label>
-                </div>
-            </div>
-            <div class="col">
-                <div class="input-group input-group-sm">
-                    <div th:field="*{imageBase64}" class="form-control form-control-solid" id="pasteArea" contenteditable="true"></div>
-                    <button class="btn btn-light btn-sm" id="uploadButton">Upload</button>
-                </div>
-            </div>
-        </div>
-
-        <div class="row mb-auto align-items-center">
-            <div class="col-md-2">
+        <div class="row mb-2 align-items-center">
+            <div class="col-4 col-md-2">
                 <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
                     <label th:for="isSold">Sold</label>
                 </div>
@@ -112,7 +102,7 @@
                 </div>
             </div>
 
-            <div class="col-md-2">
+            <div class="col-4 col-md-2">
                 <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
                     <label th:for="isKept">Keep</label>
                 </div>
@@ -124,13 +114,30 @@
             </div>
         </div>
 
+        <div class="row mb-auto">
+            <div class="col-4 col-md-2">
+                <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
+                    <label th:for="imageUpload">Preview</label>
+                </div>
+            </div>
+
+            <div class="col">
+                <input th:if="${accountForm.image == null}" id="imageInput" type="text" class="form-control form-control-solid form-control-sm"/>
+                <img th:if="${accountForm.image == null}" id="imagePreview" class="w-100 rounded-2 mt-2" style="display: none;"/>
+                <img th:if="${accountForm.image != null}" class="w-100 rounded-2 mt-2" th:src="${accountForm.image.url}"/>
+                <input th:field="*{imageUpload}" id="imageUpload" type="file" class="d-none"/>
+            </div>
+        </div>
+
     </div>
 
     <div class="modal-footer flex-center">
         <button type="reset" class="btn btn-light me-3 btn-sm" data-bs-dismiss="modal">[[#{button.discard}]]</button>
         <button hx-post="/account/save"
                 hx-target="#account-table"
-                class="btn btn-primary btn-sm">
+                class="btn btn-primary btn-sm"
+                id="submitBtn"
+        >
             [[#{button.submit}]]
         </button>
     </div>
@@ -138,9 +145,26 @@
     <script th:inline="javascript">
         /*<![CDATA[*/
 
+        $('#imageInput').on('paste', (event) => {
+            const items = (event.originalEvent || event).clipboardData.items;
+            let id = [[${id}]];
 
+            for (let item of items) {
+                if (item.kind === 'file') {
+                    let file = item.getAsFile();
+                    let reader = new FileReader();
+                    reader.onload = (e) => {
+                        $('#imagePreview').attr('src', e.target.result);
+                        $('#imagePreview').css('display', 'block');
+                        uploadImage(id, file);
+                    };
+                    reader.readAsDataURL(file);
+                }
+            }
+        });
 
         /*]]>*/
+
     </script>
 </form>
 
@@ -154,11 +178,20 @@
     <td class="align-middle">[[${item.name}]]</td>
 
     <td class="align-middle">
-        <div class="btn btn-sm text-black px-2 py-1"
+        <div class="btn tags"
              th:style="'background-color: ' + ${item.product.colorHex}"
              hx:get="|/product/form/${item.product.id}|"
              hx-target="#dialog"
              data-bs-toggle="modal"
+             th:if="${item.product != null}"
         >[[${item.product.name}]]</div>
+    </td>
+
+    <td class="align-middle">
+        <div th:if="${item.image != null}" class="rounded-1" th:style="'background-image: url(\'' + ${item.image.url} + '\'); background-repeat: no-repeat; background-size: cover; background-position: 50% 21%;'">
+            <div class="card-body position-relative custom-div">
+
+            </div>
+        </div>
     </td>
 </tr>

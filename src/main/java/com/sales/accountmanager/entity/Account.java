@@ -36,7 +36,7 @@ public class Account {
 
     private Boolean isSold;
 
-    private String imageUrl;
+    private String imagePublicId;
 
     private Date createdTime;
 

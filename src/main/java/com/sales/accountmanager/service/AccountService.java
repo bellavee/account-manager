@@ -1,10 +1,13 @@
 package com.sales.accountmanager.service;
 
+import com.sales.accountmanager.constant.ApiConstant;
 import com.sales.accountmanager.dto.AccountDto;
 import com.sales.accountmanager.dto.ProductDto;
 import com.sales.accountmanager.entity.Account;
+import com.sales.accountmanager.entity.Image;
 import com.sales.accountmanager.model.ApiResult;
 import com.sales.accountmanager.repository.AccountRepository;
+import com.sales.accountmanager.repository.ImageRepository;
 import com.sales.accountmanager.utils.CommonUtils;
 import com.sales.accountmanager.utils.DateUtils;
 import com.sales.accountmanager.utils.ServiceUtils;
@@ -12,7 +15,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -21,9 +26,15 @@ public class AccountService {
 
     private final AccountRepository repository;
     private final ProductService productService;
+    private final ImageRepository imageRepository;
 
     public List<AccountDto> findAll() {
-        List<Account> list = repository.findAllByOrderByCreatedTimeDesc();
+        List<Account> list = repository.findAllByOrderByCreatedTimeAsc();
+        return ServiceUtils.convertToDto(list, this::mapping);
+    }
+
+    public List<AccountDto> findByProductId(Long productId) {
+        List<Account> list = repository.findByProductId(productId);
         return ServiceUtils.convertToDto(list, this::mapping);
     }
 
@@ -33,7 +44,8 @@ public class AccountService {
 
     private AccountDto mapping(Account item) {
         ProductDto product = productService.findById(item.getProductId());
-        return new AccountDto(item, product);
+        Image image = imageRepository.findByPublicId(item.getImagePublicId());
+        return new AccountDto(item, product, image);
     }
 
     public ApiResult<AccountDto> save(AccountDto dto) {
@@ -53,4 +65,21 @@ public class AccountService {
         );
     }
 
+    public ApiResult<Account> uploadImage(Long id, String imagePublicId) {
+        Optional<Account> item = repository.findById(id);
+        ApiResult<Account> result = new ApiResult<>();
+        if (item.isPresent()) {
+            item.get().setImagePublicId(imagePublicId);
+            item.get().setUpdatedTime(DateUtils.asDate(LocalDateTime.now()));
+            repository.save(item.get());
+
+            result.setResCode(ApiConstant.ResCode.SUCCESS);
+            result.setResDesc(ApiConstant.ResDesc.SUCCESS);
+            return result;
+        } else {
+            result.setResCode(ApiConstant.ResCode.FAIL);
+            result.setResDesc(ApiConstant.ResDesc.FAIL);
+            return result;
+        }
+    }
 }

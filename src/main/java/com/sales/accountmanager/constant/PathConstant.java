@@ -13,5 +13,7 @@ public class PathConstant {
     public static final String HOME = "home";
     public static final String PRODUCT = "product";
     public static final String PRICE = "price";
+    public static final String API = "api";
+    public static final String UPLOAD = "upload";
 
 }

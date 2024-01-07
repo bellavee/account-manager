@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
+
 @Controller
 @RequestMapping(PathConstant.ACCOUNT)
 public class AccountController {
@@ -48,6 +50,17 @@ public class AccountController {
         return new HtmxResponse().addTemplate("account/fragments :: modal");
     }
 
+    @GetMapping(PathConstant.CREATE)
+    public HtmxResponse create(Model model) {
+        return ControllerHelper.saveGeneric(
+                new AccountDto(),
+                accountService::save,
+                model,
+                "account/fragments",
+                "Oke"
+        );
+    }
+
     @PostMapping(PathConstant.SAVE)
     public HtmxResponse save(AccountDto dto, Model model) {
         return ControllerHelper.saveGeneric(
@@ -59,6 +72,11 @@ public class AccountController {
         );
     }
 
-
+    @GetMapping(PathConstant.PRODUCT + "/{oroductId}")
+    public HtmxResponse getByProduct(@PathVariable("oroductId") Long oroductId, Model model) {
+        List<AccountDto> list = accountService.findByProductId(oroductId);
+        model.addAttribute("data", list);
+        return new HtmxResponse().addTemplate("account/fragments :: table");
+    }
 
 }

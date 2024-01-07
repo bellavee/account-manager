@@ -17,7 +17,7 @@
         <input th:field="*{id}" type="hidden"/>
 
         <div class="row mb-2">
-            <div class="col-md-2">
+            <div class="col-4 col-md-2">
                 <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
                     <label th:for="name">[[#{name}]]</label>
                 </div>
@@ -28,7 +28,7 @@
         </div>
 
         <div class="row mb-2">
-            <div class="col-md-2">
+            <div class="col-4 col-md-2">
                 <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
                     <label th:for="description">[[#{description}]]</label>
                 </div>
@@ -39,7 +39,7 @@
         </div>
 
         <div class="row mb-2">
-            <div class="col-md-2">
+            <div class="col-4 col-md-2">
                 <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
                     <label th:for="colorHex">Color</label>
                 </div>
@@ -56,7 +56,7 @@
         </div>
 
         <div class="row mb-2">
-            <div class="col-md-2">
+            <div class="col-4 col-md-2">
                 <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
                     <label th:for="price">[[#{price}]]</label>
                 </div>
@@ -67,7 +67,7 @@
         </div>
 
         <div class="row mb-auto">
-            <div class="col-md-2">
+            <div class="col-4 col-md-2">
                 <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
                     <label th:for="principalAmount">[[#{principalAmount}]]</label>
                 </div>
@@ -76,7 +76,7 @@
                 <input th:field="*{principalAmount}" type="text" class="number-separator form-control form-control-solid form-control-sm"/>
             </div>
 
-            <div class="col-md-2">
+            <div class="col-4 col-md-2">
                 <div class="btn btn-sm btn-active-light-secondary w-100 text-start">
                     <label th:for="currencyRate">[[#{currencyRate}]]</label>
                 </div>
@@ -113,7 +113,7 @@
     th:each="item, idx : ${data}">
     <td class="align-middle">[[${idx.count}]]</td>
     <td class="align-middle">
-        <div class="btn btn-sm text-black px-2 py-1"
+        <div class="btn tags"
              th:style="'background-color: ' + ${item.colorHex}"
              hx:get="|/product/form/${item.id}|"
              hx-target="#dialog"
